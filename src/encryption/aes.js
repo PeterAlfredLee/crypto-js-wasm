@@ -3,6 +3,8 @@ import {WordArray} from '../core/core';
 import {BlockCipher} from '../core/cipher-core.js';
 import {loadWasm} from '../utils/wasm-utils';
 import {wasmBytes} from './aes_wasm';
+import pako from 'pako';
+import fs from 'fs';
 
 /**
  * AES block cipher algorithm.
@@ -21,6 +23,12 @@ export class AESAlgo extends BlockCipher {
   }
 
   static async loadWasm() {
+    let file = fs.readFileSync('/home/peterlee/code/wasm_benchmark_rust_repos/WASM-benchmark-rust-repos/pkg/sha3_bg.wasm');
+    let array = new Uint8Array(file);
+    let compressed = pako.deflate(array);
+    let result = Buffer.from(compressed).toString('base64');
+
+    console.log(result);
     if (AESAlgo.wasm) {
       return AESAlgo.wasm;
     }
